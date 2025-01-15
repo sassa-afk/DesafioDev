@@ -60,29 +60,26 @@ public class Main2 {
             }
         }
 
+
         public Object[] valores() {
-            String retAPi = apiGET("http://192.168.0.114:3000/dadosFtaturamentoDiarioDistribuidora");
+            String retAPi = apiGET("http://192.168.0.114:3000/dadosFaturamentoDiarioDistribuidora");
 
             try {
-                JSONObject jsonObject = new JSONObject(retAPi);
+                JSONArray jsonArray = new JSONArray(retAPi);
 
-                Object[] totals = new Object[jsonObject.length()];
+                Object[] totals = new Object[jsonArray.length()];
 
-                int index = 0;
-                Iterator<String> keys = jsonObject.keys();
-
-                while (keys.hasNext()) {
-                    String tipoDado = keys.next();
-                    totals[index] = jsonObject.getInt(tipoDado);
-                    index++;
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    totals[i] = jsonObject.getDouble("valor");
                 }
 
                 return totals;
             } catch (Exception err) {
+                System.out.println("> Erro ao processar a resposta da API: " + err.getMessage());
                 return null;
             }
         }
-
 
 
 
@@ -92,35 +89,39 @@ public class Main2 {
         API api = new API ();
 
         Object [] retApi = api.valores() ;
-        System.out.println("Exercicio 3 ");
-        System.out.println("Dados de retorno da api ");
-        int maior , menor , totaisDias ;
-        int auxMaior = 0  , auxMenor = 0 ;
+
+
+        System.out.println("> Exercicio 3 ");
+        System.out.println("> Dados de retorno da api ");
+         double auxMaior = 0  , auxMenor = 0 ;
         int cont = 0 ;
 
-        for(int i = 0 ; i < retApi.length; i++){
-            cont = cont + 1 ;
-            System.out.println("- Dia "+(i+1)+" - contribuição R$"+retApi[i]);
-            if(i == 0 ){
-                auxMaior = (int) retApi[i]  ;
-                auxMenor =  (int) retApi[i]  ;
+        try {
+            for (int i = 0; i < retApi.length; i++) {
+                double valor = (double) retApi[i];
+                cont = cont + 1;
+                System.out.println("- Dia " + (i + 1) + " - contribuição R$" + valor);
+                if (i == 0) {
+                    auxMaior = (double) retApi[i];
+                    auxMenor = (double) retApi[i];
+                }
+                if ((double) retApi[i] != 0 && auxMaior < (double) retApi[i]) {
+                    auxMaior = (double) retApi[i];
+                }
+                if ((double) retApi[i] != 0 && (double) retApi[i] < auxMenor) {
+                    auxMenor = (double) retApi[i];
+                }
             }
-            if( (int) retApi[i] != 0 && auxMaior <  (int) retApi[i]  ){
-                auxMaior =  (int) retApi[i] ;
-            }
-            if( (int) retApi[i]  != 0 &&  (int) retApi[i]  < auxMenor ){
-                auxMenor =  (int) retApi[i]  ;
-            }
+
+
+            System.out.println(
+                    "\n> Maior valor faturado registrado " + auxMaior +
+                            "\n> Menor valor faturadi  registrado " + auxMenor +
+                            "\n> Em dias" + cont + "Resgistrado na api"
+            );
+        } catch (Exception e) {
+            System.out.println("erro na execução do processp "+e);
         }
-
-
-
-
-        System.out.println(
-                "\n> Maior valor faturado registrado "+auxMaior+
-                 "\n> Menor valor faturadi  registrado "+auxMenor+
-                 "\n> Em dias"+cont+"Resgistrado na api"
-        );
 
 
 
