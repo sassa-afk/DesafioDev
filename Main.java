@@ -9,7 +9,7 @@ public class Main {
             System.out.println("\n\n 1) Observe o trecho de código abaixo: int INDICE = 13, SOMA = 0, K = 0 " +
                     "Enquanto K < INDICE faça { K = K + 1; SOMA = SOMA + K; }" +
                     "Imprimir(SOMA)\n" +
-                    "Ao final do processamento, qual será o valor da variável SOMA?\n\n");
+                    "Ao final do processamento, qual será o valor da variável SOMA?\n");
 
             int INDICE = 13, SOMA = 0, K = 0;
 
@@ -18,7 +18,7 @@ public class Main {
                 SOMA = SOMA + K;
             }
 
-            System.out.println("Soma é " + SOMA + "\n\n");
+            System.out.println("> Soma é " + SOMA );
         }
 
         void exe2() {
@@ -28,7 +28,7 @@ public class Main {
                             " ele calcule a sequência de Fibonacci e retorne uma mensagem avisando se o número informado pertence ou não à sequência."
             );
 
-            System.out.println("- Insira o número para verificar na sequência de Fibonacci:");
+            System.out.print("- Insira o número para verificar na sequência de Fibonacci:");
             int valor;
 
             try {
@@ -52,9 +52,9 @@ public class Main {
                     }
 
                     if (valida) {
-                        System.out.println("O número " + valor + " pertence à sequência.");
+                        System.out.println("> O número " + valor + " pertence à sequência.");
                     } else {
-                        System.out.println("O número " + valor + " NÃO pertence à sequência.");
+                        System.out.println("> O número " + valor + " NÃO pertence à sequência.");
                     }
                 }
             } catch (Exception err) {
@@ -65,6 +65,27 @@ public class Main {
         public String exe3() {
             return " https://github.com/sassa-afk/DesafioDev/tree/main  (api servidor node.js com nome api.js e arquivo com exercicios Main2.java) ";
         }
+        
+	public double porcentagem(double total, double valor) {
+	    return (valor / total) * 100; 
+	}
+	
+	public void exe4(){
+		double sp = 67836.43 ;
+		double rj = 36678.66;
+		double mg = 29229.88;
+		double es = 27165.48;
+		double  outros = 19849.53  ;
+		double total = sp+rj+mg+es+outros;
+		
+		System.out.println("Valor total do lucro : "+ total );
+		System.out.println("Porcentage SP "+ porcentagem( total , sp) );
+		System.out.println("Porcentage RJ "+ porcentagem(total ,rj) );
+		System.out.println("Porcentage MG "+ porcentagem(total ,mg) );
+		System.out.println("Porcentage ES "+ porcentagem(total ,es) );
+		System.out.println("Porcentage Outros "+ porcentagem(total , outros) );
+		
+	}
 
         public void exe5() {
             System.out.println(
@@ -100,6 +121,8 @@ public class Main {
 
             System.out.print("Digite o exercico que deseja : ");
             String op = sc.next();
+		
+	   System.out.println("==========\n");
 
             if (op.equals("0")) {
                 System.out.println("Algoritimo finalizado");
@@ -113,7 +136,8 @@ public class Main {
             } else if (op.equals("3")) {
                 System.out.println("Selecionado exercicio 3  exercicio no diretorio " + ex.exe3());
             } else if (op.equals("4")) {
-                System.out.println("Selecionado exercicio 4  exercicio no diretorio" + ex.exe3());
+                System.out.println("Selecionado exercicio 4  ");
+                ex.exe4();
             } else if (op.equals("5")) {
                 System.out.println("Selecionado exercicio 5 ");
                 ex.exe5();
@@ -125,4 +149,3 @@ public class Main {
         }
     }
 }
-
