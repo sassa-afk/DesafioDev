@@ -1,0 +1,128 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
+
+public class Main2 {
+
+    static class API {
+        private  String apiGET(String novaRota) {
+            HttpURLConnection conexao = null;
+            BufferedReader in = null;
+
+            try {
+                URL url = new URL(novaRota);
+                conexao = (HttpURLConnection) url.openConnection();
+                conexao.setRequestMethod("GET");
+                conexao.setRequestProperty("Content-Type", "application/json");
+                conexao.setRequestProperty("Accept", "application/json");
+
+                if (conexao.getResponseCode() == 200) {
+                    in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
+                    String inputLine;
+                    StringBuilder response = new StringBuilder();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+
+                    return response.toString();
+                } else {
+                    return conexao.getResponseCode() + " " + conexao.getResponseMessage();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "-> Erro: " + e.getMessage()+"     "+e;
+            }
+            finally {
+                try {
+                    if (in != null) {
+
+                        in.close();
+                        conexao.disconnect();
+
+
+                    }
+                } catch (IOException e) {
+                    conexao.disconnect();
+                    e.printStackTrace();
+                }
+                if (conexao != null) {
+
+                    conexao.disconnect();
+                }
+            }
+        }
+
+        public Object[] valores() {
+            String retAPi = apiGET("http://192.168.0.114:3000/dadosFtaturamentoDiarioDistribuidora");
+
+            try {
+                JSONObject jsonObject = new JSONObject(retAPi);
+
+                Object[] totals = new Object[jsonObject.length()];
+
+                int index = 0;
+                Iterator<String> keys = jsonObject.keys();
+
+                while (keys.hasNext()) {
+                    String tipoDado = keys.next();
+                    totals[index] = jsonObject.getInt(tipoDado);
+                    index++;
+                }
+
+                return totals;
+            } catch (Exception err) {
+                return null;
+            }
+        }
+
+
+
+
+    }
+    public static void main(String[] args) {
+
+        API api = new API ();
+
+        Object [] retApi = api.valores() ;
+        System.out.println("Exercicio 3 ");
+        System.out.println("Dados de retorno da api ");
+        int maior , menor , totaisDias ;
+        int auxMaior = 0  , auxMenor = 0 ;
+        int cont = 0 ;
+
+        for(int i = 0 ; i < retApi.length; i++){
+            cont = cont + 1 ;
+            System.out.println("- Dia "+(i+1)+" - contribuição R$"+retApi[i]);
+            if(i == 0 ){
+                auxMaior = (int) retApi[i]  ;
+                auxMenor =  (int) retApi[i]  ;
+            }
+            if( (int) retApi[i] != 0 && auxMaior <  (int) retApi[i]  ){
+                auxMaior =  (int) retApi[i] ;
+            }
+            if( (int) retApi[i]  != 0 &&  (int) retApi[i]  < auxMenor ){
+                auxMenor =  (int) retApi[i]  ;
+            }
+        }
+
+
+
+
+        System.out.println(
+                "\n> Maior valor faturado registrado "+auxMaior+
+                 "\n> Menor valor faturadi  registrado "+auxMenor+
+                 "\n> Em dias"+cont+"Resgistrado na api"
+        );
+
+
+
+    }
+}
